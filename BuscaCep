@@ -1,0 +1,37 @@
+Private myXML As DOMDocument
+Private X As IXMLDOMNode
+
+Private Sub cmdBusca_Click()
+On Error GoTo linha_de_erro
+    MousePointer = 11
+    Dim xlink As String
+    Set myXML = New DOMDocument
+    myXML.resolveExternals = True
+    myXML.validateOnParse = True
+    myXML.async = False
+    xlink = "https://viacep.com.br/ws/" & txtCEP & "/xml/"
+    myXML.Load (xlink)
+    For Each X In myXML.documentElement.childNodes
+        Select Case X.nodeName
+               Dim xrua As String
+               Dim xtipo As String
+               Case Is = "logradouro"
+                    xrua = UCase$(X.childNodes(0).Text)
+               Case Is = "uf"
+                    txtEstado = UCase$(X.childNodes(0).Text)
+               Case Is = "localidade"
+                    txtCidade = UCase$(X.childNodes(0).Text)
+               Case Is = "bairro"
+                    txtBairro = UCase$(X.childNodes(0).Text)
+               Case Is = "tipo_logradouro"
+                    xtipo = UCase$(X.childNodes(0).Text)
+        End Select
+        txtLogradouro = xtipo & " " & xrua
+    Next
+    MousePointer = 0
+    Exit Sub
+linha_de_erro:
+    MsgBox "Cep Invalido", vbInformation
+    
+    
+End Sub
